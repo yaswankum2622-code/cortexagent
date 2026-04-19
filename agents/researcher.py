@@ -1,5 +1,6 @@
 """Researcher agent: runs Self-RAG-graded hybrid retrieval and summarizes findings."""
 
+import anthropic
 import logging
 import time
 from datetime import datetime, timezone
@@ -93,3 +94,68 @@ If the chunks don't contain enough info, say so explicitly."""
             "research_notes": resp.content,
             "audit_trail": state.get("audit_trail", []) + [audit_entry],
         }
+
+    def run_with_tools(self, state: Dict[str, Any], enable_tools: bool = True) -> Dict[str, Any]:
+        """
+        Like run(), but also gives the LLM access to MCP tools after initial retrieval.
+
+        The LLM may call ONE tool to enrich research if 10-K data is insufficient.
+        """
+        state = self.run(state)
+
+        if not enable_tools:
+            return state
+
+        from tools.mcp_definitions import execute_tool, get_schemas
+
+        enrichment_prompt = (
+            f"You just finished initial research on: '{state['query']}'.\n\n"
+            f"Your research notes:\n{state.get('research_notes', '')[:1500]}\n\n"
+            "If the SEC 10-K corpus does NOT cover an aspect of this question (e.g., "
+            "post-filing news, market reaction, recent analyst commentary), you MAY call "
+            "ONE tool to enrich your findings. If 10-K data is sufficient, do NOT call any "
+            "tool — just respond with the text 'NO_TOOL_NEEDED'."
+        )
+
+        try:
+            client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+            schemas = get_schemas()
+            resp = client.messages.create(
+                model=settings.critic_model,
+                max_tokens=1024,
+                tools=schemas,
+                messages=[{"role": "user", "content": enrichment_prompt}],
+            )
+
+            tool_calls = [
+                block for block in resp.content if getattr(block, "type", "") == "tool_use"
+            ]
+            if tool_calls:
+                tool_call = tool_calls[0]
+                tool_result = execute_tool(tool_call.name, dict(tool_call.input))
+                audit_entry = {
+                    "agent": "researcher",
+                    "action": f"tool_use:{tool_call.name}",
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "model": settings.critic_model,
+                    "input_summary": str(tool_call.input)[:200],
+                    "output_summary": str(
+                        tool_result.get("result", tool_result.get("error", ""))
+                    )[:200],
+                    "latency_ms": 0,
+                }
+                state["audit_trail"] = state.get("audit_trail", []) + [audit_entry]
+                state["tool_enrichment"] = {
+                    "tool_called": tool_call.name,
+                    "input": dict(tool_call.input),
+                    "result": tool_result,
+                }
+                print(f"[R+TOOL] Researcher called {tool_call.name}")
+            else:
+                state["tool_enrichment"] = None
+                print("[R+TOOL] No tool needed — 10-K data sufficient")
+        except Exception as exc:
+            logger.warning("Tool-use enrichment failed (non-fatal): %s", exc)
+            state["tool_enrichment"] = {"error": str(exc)}
+
+        return state
