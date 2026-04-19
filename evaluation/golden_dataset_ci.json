@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "id": "aapl_002",
+    "ticker": "AAPL",
+    "question": "How does Apple define its reportable segments, and how does management evaluate segment performance?",
+    "ground_truth": "Apple manages the business primarily on a geographic basis, with reportable segments of Americas, Europe, Greater China, Japan, and Rest of Asia Pacific. Management evaluates those segments using net sales and operating income.",
+    "category": "operations",
+    "difficulty": "medium",
+    "expected_chunk_terms": ["reportable segments", "Americas", "Greater China", "net sales", "operating income"]
+  },
+  {
+    "id": "msft_002",
+    "ticker": "MSFT",
+    "question": "How is Microsoft using AI across both productivity software and cloud infrastructure?",
+    "ground_truth": "Microsoft is embedding AI into productivity offerings such as Copilot for Microsoft 365, Windows, Security, and GitHub, while also selling Azure AI infrastructure, tools, and models to enterprises and developers. The strategy ties AI copilots at the application layer to Azure's cloud platform and a long-term OpenAI partnership.",
+    "category": "strategy",
+    "difficulty": "medium",
+    "expected_chunk_terms": ["Copilot for Microsoft 365", "Azure AI", "GitHub Copilot", "OpenAI", "Windows"]
+  },
+  {
+    "id": "googl_002",
+    "ticker": "GOOGL",
+    "question": "How is Alphabet positioning AI across consumer products and Google Cloud?",
+    "ground_truth": "Alphabet describes itself as AI-first and says Gemini and other models will be used across Search, ads, devices, Workspace, and other Google products. On the enterprise side, it emphasizes Google Cloud, Vertex AI, and AI-optimized infrastructure as the way organizations build and deploy AI applications.",
+    "category": "strategy",
+    "difficulty": "medium",
+    "expected_chunk_terms": ["AI-first company", "Gemini", "Vertex AI", "Google Cloud", "AI-optimized infrastructure"]
+  },
+  {
+    "id": "jpm_002",
+    "ticker": "JPM",
+    "question": "Which JPMorgan business segments generated the most revenue in 2024, and how did they rank?",
+    "ground_truth": "Consumer & Community Banking generated the most total net revenue at about $70.1 billion, followed by Corporate & Investment Bank at about $48.8 billion. Asset & Wealth Management was next at about $19.8 billion, and Commercial Banking generated about $15.5 billion.",
+    "category": "financials",
+    "difficulty": "medium",
+    "expected_chunk_terms": ["70,148", "48,807", "19,827", "15,546", "total net revenue"]
+  },
+  {
+    "id": "tsla_002",
+    "ticker": "TSLA",
+    "question": "What risks does Tesla disclose around Elon Musk and Autopilot/FSD?",
+    "ground_truth": "Tesla says it is highly dependent on Elon Musk, who does not devote all of his time to the company and is involved in several other ventures. It also warns that Autopilot and FSD Capability face evolving regulation, litigation, and marketing scrutiny that could restrict sales, operation, or feature rollout.",
+    "category": "risks",
+    "difficulty": "medium",
+    "expected_chunk_terms": ["highly dependent on the services of Elon Musk", "Autopilot", "FSD Capability", "regulations", "litigation"]
+  }
+]

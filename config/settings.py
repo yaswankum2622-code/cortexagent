@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     # === LLM Provider Keys ===
     anthropic_api_key: str = Field(..., description="Anthropic API key")
     gemini_api_key: str = Field(..., description="Google Gemini API key")
+    groq_api_key: str = Field(
+        ...,
+        description="Groq API key for Llama/Mixtral inference fallback",
+    )
 
     # === SEC EDGAR Identity ===
     sec_identity: str = Field(
@@ -33,6 +37,8 @@ class Settings(BaseSettings):
     critic_model: str = Field(default="claude-sonnet-4-5")
     selfrag_model: str = Field(default="gemini-2.5-flash")
     ragas_judge_model: str = Field(default="claude-sonnet-4-5")
+    groq_primary_model: str = Field(default="llama-3.3-70b-versatile")
+    groq_fast_model: str = Field(default="llama-3.1-8b-instant")
 
     # === Embedding Model (local sentence-transformers) ===
     embedding_model: str = Field(default="all-MiniLM-L6-v2")
@@ -63,7 +69,7 @@ class Settings(BaseSettings):
             )
         return v
 
-    @field_validator("anthropic_api_key", "gemini_api_key")
+    @field_validator("anthropic_api_key", "gemini_api_key", "groq_api_key")
     @classmethod
     def keys_must_not_be_placeholder(cls, v: str) -> str:
         placeholders = ("your_", "xxx", "placeholder", "<", "changeme")
@@ -87,11 +93,13 @@ class Settings(BaseSettings):
             raise ValueError(f"Unknown agent: {agent_name}")
         return mapping[agent_name]
 
-    def provider_for_model(self, model_name: str) -> Literal["anthropic", "gemini"]:
+    def provider_for_model(self, model_name: str) -> Literal["anthropic", "gemini", "groq"]:
         if model_name.startswith("claude"):
             return "anthropic"
         if model_name.startswith("gemini"):
             return "gemini"
+        if model_name.startswith(("llama", "mixtral", "qwen", "gemma", "deepseek")):
+            return "groq"
         raise ValueError(f"Cannot determine provider for model: {model_name}")
 
 
@@ -116,9 +124,20 @@ def validate_settings() -> bool:
     checks = [
         ("Anthropic API key", bool(s.anthropic_api_key) and len(s.anthropic_api_key) > 20),
         ("Gemini API key", bool(s.gemini_api_key) and len(s.gemini_api_key) > 20),
+        ("Groq API key", bool(s.groq_api_key) and len(s.groq_api_key) > 20),
         ("SEC identity", "@" in s.sec_identity and " " in s.sec_identity),
-        ("Researcher model", s.researcher_model.startswith(("claude", "gemini"))),
-        ("Writer model", s.writer_model.startswith(("claude", "gemini"))),
+        (
+            "Researcher model",
+            s.researcher_model.startswith(
+                ("claude", "gemini", "llama", "mixtral", "qwen", "gemma", "deepseek")
+            ),
+        ),
+        (
+            "Writer model",
+            s.writer_model.startswith(
+                ("claude", "gemini", "llama", "mixtral", "qwen", "gemma", "deepseek")
+            ),
+        ),
         ("Embedding model set", bool(s.embedding_model)),
         ("Faithfulness threshold valid", 0 <= s.ragas_faithfulness_threshold <= 1),
     ]

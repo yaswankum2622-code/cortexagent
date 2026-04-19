@@ -1,0 +1,152 @@
+name: RAGAS Quality Gate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'agents/**'
+      - 'rag/**'
+      - 'evaluation/**'
+      - 'config/**'
+      - 'pyproject.toml'
+  workflow_dispatch:
+
+concurrency:
+  group: ragas-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ragas-eval:
+    name: RAGAS Evaluation Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Install project dependencies
+        run: |
+          uv venv
+          source .venv/bin/activate
+          uv pip install -e .
+
+      - name: Cache HuggingFace models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-models-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            hf-models-
+
+      - name: Verify required secrets are configured
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          SEC_IDENTITY: ${{ secrets.SEC_IDENTITY }}
+        run: |
+          source .venv/bin/activate
+          if [ -z "$ANTHROPIC_API_KEY" ]; then echo "::error::ANTHROPIC_API_KEY not set"; exit 1; fi
+          if [ -z "$GEMINI_API_KEY" ]; then echo "::error::GEMINI_API_KEY not set"; exit 1; fi
+          if [ -z "$GROQ_API_KEY" ]; then echo "::error::GROQ_API_KEY not set"; exit 1; fi
+          if [ -z "$SEC_IDENTITY" ]; then echo "::error::SEC_IDENTITY not set"; exit 1; fi
+          echo "All secrets present."
+
+      - name: Build .env file from secrets
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          SEC_IDENTITY: ${{ secrets.SEC_IDENTITY }}
+        run: |
+          cat > .env <<EOF
+          ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY
+          GEMINI_API_KEY=$GEMINI_API_KEY
+          GROQ_API_KEY=$GROQ_API_KEY
+          SEC_IDENTITY=$SEC_IDENTITY
+          RESEARCHER_MODEL=gemini-2.5-flash-lite
+          ANALYST_MODEL=gemini-2.5-flash-lite
+          WRITER_MODEL=claude-sonnet-4-5
+          CRITIC_MODEL=claude-sonnet-4-5
+          SELFRAG_MODEL=gemini-2.5-flash-lite
+          RAGAS_JUDGE_MODEL=claude-sonnet-4-5
+          EMBEDDING_MODEL=all-MiniLM-L6-v2
+          CHROMA_PERSIST_DIR=./chroma_db
+          POSTGRES_URL=postgresql://cortex:cortex@localhost:5432/cortexagent
+          REDIS_URL=redis://localhost:6379
+          RAGAS_FAITHFULNESS_THRESHOLD=0.85
+          RAGAS_ANSWER_RELEVANCE_THRESHOLD=0.80
+          RAGAS_CONTEXT_PRECISION_THRESHOLD=0.75
+          LOG_LEVEL=INFO
+          EOF
+          echo "Built .env from secrets."
+
+      - name: Validate settings
+        run: |
+          source .venv/bin/activate
+          python config/settings.py
+
+      - name: Smoke test LLM client (cheap multi-provider check)
+        run: |
+          source .venv/bin/activate
+          python -m agents._llm_client
+
+      - name: Ingest SEC corpus (only 1 ticker for CI speed)
+        env:
+          CI_INGEST_TICKERS: AAPL
+          CI_INGEST_YEARS: 2024
+        run: |
+          source .venv/bin/activate
+          python -m rag.ingestion
+
+      - name: Run RAGAS quality gate (5-question CI subset)
+        run: |
+          source .venv/bin/activate
+          python -m evaluation.benchmark_runner \
+            --dataset evaluation/golden_dataset_ci.json \
+            --output evaluation/ci_report.html \
+            --save-raw evaluation/ci_raw_results.json \
+            --max-questions 5
+
+      - name: Upload RAGAS report as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ragas-ci-report
+          path: |
+            evaluation/ci_report.html
+            evaluation/ci_raw_results.json
+          retention-days: 30
+
+      - name: Post summary to PR
+        if: always()
+        run: |
+          source .venv/bin/activate
+          python -c "
+          import json
+          try:
+              with open('evaluation/ci_raw_results.json') as f:
+                  r = json.load(f)
+              agg = r.get('aggregate', {})
+              print('## RAGAS Quality Gate Results')
+              print('')
+              print('| Metric | Score | Threshold |')
+              print('|---|---|---|')
+              print(f\"| Faithfulness | {agg.get('faithfulness', 0):.3f} | 0.85 |\")
+              print(f\"| Answer Relevancy | {agg.get('answer_relevancy', 0):.3f} | 0.80 |\")
+              print(f\"| Context Precision | {agg.get('context_precision', 0):.3f} | 0.75 |\")
+              print(f\"| Answer Correctness | {agg.get('answer_correctness', 0):.3f} | (no threshold) |\")
+          except Exception as e:
+              print(f'Could not parse results: {e}')
+          " >> $GITHUB_STEP_SUMMARY

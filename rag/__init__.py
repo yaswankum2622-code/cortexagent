@@ -1,1 +1,1 @@
-"""RAG package for ingestion, retrieval, and refinement components."""
+"""RAG package: ingestion, retrieval, and Self-RAG quality grading."""

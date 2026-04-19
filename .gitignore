@@ -10,6 +10,10 @@ data/raw/*
 data/processed/*
 !data/processed/.gitkeep
 chroma_db/
+
+# Stray ChromaDB folder variant
+chroma/
+
 *.log
 .pytest_cache/
 .mypy_cache/
@@ -21,6 +25,13 @@ build/
 Thumbs.db
 .idea/
 .vscode/
+
+# RAGAS evaluation outputs — only commit *_final variants as portfolio artifacts
+evaluation/report_v*.html
 evaluation/report.html
-evaluation/ci_report.html
+evaluation/ci_report*.html
+evaluation/raw_results.json
+evaluation/raw_results_v*.json
+evaluation/ci_raw_results.json
+
 data/calendar_bookings.json

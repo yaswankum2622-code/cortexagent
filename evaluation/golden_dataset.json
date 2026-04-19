@@ -1,1 +1,137 @@
-[]
+[
+  {
+    "id": "aapl_001",
+    "ticker": "AAPL",
+    "question": "Which Apple product categories generated the most net sales in 2024, and what does that say about its revenue mix?",
+    "ground_truth": "iPhone remained Apple's largest category at approximately $201.2 billion of net sales in 2024, while Services was second at about $96.2 billion. That mix shows Apple still depends heavily on iPhone revenue, but Services is a very large and growing second engine.",
+    "category": "financials",
+    "difficulty": "easy",
+    "expected_chunk_terms": ["iPhone", "Services", "net sales", "201,183", "96,169"]
+  },
+  {
+    "id": "aapl_002",
+    "ticker": "AAPL",
+    "question": "How does Apple define its reportable segments, and how does management evaluate segment performance?",
+    "ground_truth": "Apple manages the business primarily on a geographic basis, with reportable segments of Americas, Europe, Greater China, Japan, and Rest of Asia Pacific. Management evaluates those segments using net sales and operating income.",
+    "category": "operations",
+    "difficulty": "medium",
+    "expected_chunk_terms": ["reportable segments", "Americas", "Greater China", "net sales", "operating income"]
+  },
+  {
+    "id": "aapl_003",
+    "ticker": "AAPL",
+    "question": "What supply chain and macroeconomic risks does Apple emphasize for its global business?",
+    "ground_truth": "Apple says its global supply chain and international sales expose it to trade restrictions, tariffs, geopolitical tensions, component shortages, and other disruptions outside its control. It also highlights macroeconomic pressures such as inflation, recession risk, and currency fluctuations that can weaken demand and squeeze results.",
+    "category": "risks",
+    "difficulty": "hard",
+    "expected_chunk_terms": ["global supply chain", "trade restrictions", "tariffs", "component shortages", "currency fluctuations"]
+  },
+  {
+    "id": "msft_001",
+    "ticker": "MSFT",
+    "question": "How large was Microsoft's Microsoft Cloud business in fiscal 2024, and what drove its growth?",
+    "ground_truth": "Microsoft Cloud revenue was about $137.4 billion in fiscal 2024. Growth was driven in large part by Azure and other cloud services, which grew about 30 percent, alongside Office 365 Commercial, LinkedIn, Dynamics 365, and other commercial cloud properties.",
+    "category": "financials",
+    "difficulty": "easy",
+    "expected_chunk_terms": ["Microsoft Cloud revenue", "137.4 billion", "Azure", "30%", "Office 365 Commercial"]
+  },
+  {
+    "id": "msft_002",
+    "ticker": "MSFT",
+    "question": "How is Microsoft using AI across both productivity software and cloud infrastructure?",
+    "ground_truth": "Microsoft is embedding AI into productivity offerings such as Copilot for Microsoft 365, Windows, Security, and GitHub, while also selling Azure AI infrastructure, tools, and models to enterprises and developers. The strategy ties AI copilots at the application layer to Azure's cloud platform and a long-term OpenAI partnership.",
+    "category": "strategy",
+    "difficulty": "medium",
+    "expected_chunk_terms": ["Copilot for Microsoft 365", "Azure AI", "GitHub Copilot", "OpenAI", "Windows"]
+  },
+  {
+    "id": "msft_003",
+    "ticker": "MSFT",
+    "question": "How does Microsoft's governance structure oversee cybersecurity risk?",
+    "ground_truth": "Microsoft says its Board of Directors oversees cybersecurity risk and receives reviews at least quarterly, with presentations from senior leaders including the CISO, the EVP of Microsoft Security, and the head of Customer Security and Trust. Those reviews cover threats, incidents, top risks, remediation, and the functioning of the incident response program.",
+    "category": "governance",
+    "difficulty": "hard",
+    "expected_chunk_terms": ["Board of Directors oversees cybersecurity risk", "quarterly", "CISO", "EVP of Microsoft Security", "Customer Security and Trust"]
+  },
+  {
+    "id": "googl_001",
+    "ticker": "GOOGL",
+    "question": "What revenue did Alphabet generate from Google Services, Google Cloud, and Other Bets in 2024?",
+    "ground_truth": "In 2024, Alphabet reported approximately $272.5 billion of revenue from Google Services, $33.1 billion from Google Cloud, and $1.5 billion from Other Bets. The filing shows Google Services remains by far the dominant revenue engine, with Cloud much smaller but scaling.",
+    "category": "financials",
+    "difficulty": "easy",
+    "expected_chunk_terms": ["Google Services", "Google Cloud", "Other Bets", "272,543", "33,088"]
+  },
+  {
+    "id": "googl_002",
+    "ticker": "GOOGL",
+    "question": "How is Alphabet positioning AI across consumer products and Google Cloud?",
+    "ground_truth": "Alphabet describes itself as AI-first and says Gemini and other models will be used across Search, ads, devices, Workspace, and other Google products. On the enterprise side, it emphasizes Google Cloud, Vertex AI, and AI-optimized infrastructure as the way organizations build and deploy AI applications.",
+    "category": "strategy",
+    "difficulty": "medium",
+    "expected_chunk_terms": ["AI-first company", "Gemini", "Vertex AI", "Google Cloud", "AI-optimized infrastructure"]
+  },
+  {
+    "id": "googl_003",
+    "ticker": "GOOGL",
+    "question": "Why are traffic acquisition costs and privacy investigations important risks for Alphabet?",
+    "ground_truth": "Alphabet warns that TAC and the TAC rate can fluctuate with partner mix, device mix, and channel economics, which can pressure margins even when ad revenue grows. It also says privacy laws, investigations, and litigation around data use and advertising practices could lead to fines, judgments, product changes, and reputational harm.",
+    "category": "risks",
+    "difficulty": "hard",
+    "expected_chunk_terms": ["traffic acquisition costs", "TAC rate", "distribution partners", "privacy-related laws", "advertising practices"]
+  },
+  {
+    "id": "jpm_001",
+    "ticker": "JPM",
+    "question": "What are JPMorgan Chase's four main business segments, and what does each broadly do?",
+    "ground_truth": "JPMorgan Chase operates Consumer & Community Banking, Corporate & Investment Bank, Commercial Banking, and Asset & Wealth Management. Together they cover consumer and small-business banking, institutional banking and markets, middle-market and corporate clients, and investment and wealth management services.",
+    "category": "operations",
+    "difficulty": "easy",
+    "expected_chunk_terms": ["Consumer & Community Banking", "Corporate & Investment Bank", "Commercial Banking", "Asset & Wealth Management"]
+  },
+  {
+    "id": "jpm_002",
+    "ticker": "JPM",
+    "question": "Which JPMorgan business segments generated the most revenue in 2024, and how did they rank?",
+    "ground_truth": "Consumer & Community Banking generated the most total net revenue at about $70.1 billion, followed by Corporate & Investment Bank at about $48.8 billion. Asset & Wealth Management was next at about $19.8 billion, and Commercial Banking generated about $15.5 billion.",
+    "category": "financials",
+    "difficulty": "medium",
+    "expected_chunk_terms": ["70,148", "48,807", "19,827", "15,546", "total net revenue"]
+  },
+  {
+    "id": "jpm_003",
+    "ticker": "JPM",
+    "question": "What do JPMorgan's 2024 credit loss figures suggest about the firm's risk environment?",
+    "ground_truth": "JPMorgan reported about $9.3 billion of provision for credit losses and a total allowance for credit losses of roughly $24.5 billion. Those figures suggest the firm was reserving materially for consumer and wholesale credit risk even as overall revenue remained strong.",
+    "category": "risks",
+    "difficulty": "hard",
+    "expected_chunk_terms": ["provision for credit losses", "9,320", "allowance for credit losses", "24,522", "credit risk"]
+  },
+  {
+    "id": "tsla_001",
+    "ticker": "TSLA",
+    "question": "How was Tesla's 2024 revenue mix split across automotive, energy, and services?",
+    "ground_truth": "Tesla reported about $82.4 billion of total automotive revenues in 2024, about $6.0 billion from energy generation and storage, and about $8.3 billion from services and other revenue. The filing shows the company is still overwhelmingly automotive, but energy and services are meaningful and growing pieces of the mix.",
+    "category": "financials",
+    "difficulty": "easy",
+    "expected_chunk_terms": ["Total automotive revenues", "82,419", "Energy generation and storage", "6,035", "Services and other"]
+  },
+  {
+    "id": "tsla_002",
+    "ticker": "TSLA",
+    "question": "What risks does Tesla disclose around Elon Musk and Autopilot/FSD?",
+    "ground_truth": "Tesla says it is highly dependent on Elon Musk, who does not devote all of his time to the company and is involved in several other ventures. It also warns that Autopilot and FSD Capability face evolving regulation, litigation, and marketing scrutiny that could restrict sales, operation, or feature rollout.",
+    "category": "risks",
+    "difficulty": "medium",
+    "expected_chunk_terms": ["highly dependent on the services of Elon Musk", "Autopilot", "FSD Capability", "regulations", "litigation"]
+  },
+  {
+    "id": "tsla_003",
+    "ticker": "TSLA",
+    "question": "How is Tesla expanding manufacturing and energy storage capacity to support growth?",
+    "ground_truth": "Tesla says it is expanding output across factories in California, Nevada, Texas, Shanghai, Berlin-Brandenburg, and New York, while also planning a future Gigafactory in Monterrey, Mexico. On the energy side, it highlights Megapack growth, the new Megafactory in Shanghai, and ongoing ramping in Lathrop, alongside investment in proprietary battery cell manufacturing.",
+    "category": "strategy",
+    "difficulty": "hard",
+    "expected_chunk_terms": ["Gigafactory Texas", "Gigafactory Shanghai", "Gigafactory Berlin-Brandenburg", "Megapack", "battery cells"]
+  }
+]

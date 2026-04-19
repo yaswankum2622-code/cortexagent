@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>CortexAgent - RAGAS Eval Report</title>
+<style>
+body { font-family: -apple-system, Segoe UI, sans-serif; max-width: 1200px; margin: 40px auto; padding: 20px; color: #222; }
+h1 { color: #1a1a1a; }
+.pass { background: #e8f7ec; }
+.fail { background: #fdecea; }
+.banner-pass { background: #16a34a; color: white; padding: 15px; border-radius: 6px; font-size: 18px; }
+.banner-fail { background: #dc2626; color: white; padding: 15px; border-radius: 6px; font-size: 18px; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+th { background: #f9fafb; font-weight: 600; }
+.metric-box { display: inline-block; padding: 20px; margin: 10px; border-radius: 6px; background: #f3f4f6; min-width: 180px; text-align: center; }
+.metric-box .label { color: #6b7280; font-size: 13px; }
+.metric-box .value { font-size: 28px; font-weight: 700; margin: 8px 0; }
+.threshold-note { color: #6b7280; font-size: 12px; }
+.q-text { max-width: 400px; }
+code { background: #f3f4f6; padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+</style></head><body>
+
+<h1>CortexAgent - RAGAS Evaluation Report</h1>
+<p class="threshold-note">Generated: 2026-04-19T09:49:00.970031+00:00</p>
+
+<div class="banner-fail">
+  FAILED: Faithfulness 0.426 < threshold 0.85; Answer relevancy 0.222 < threshold 0.8; Context precision 0.283 < threshold 0.75
+</div>
+
+<h2>Aggregate Scores (15 evaluated / 15 total)</h2>
+
+<div>
+  <div class="metric-box fail">
+    <div class="label">Faithfulness</div>
+    <div class="value">0.426</div>
+    <div class="threshold-note">threshold 0.85</div>
+  </div>
+  <div class="metric-box fail">
+    <div class="label">Answer Relevancy</div>
+    <div class="value">0.222</div>
+    <div class="threshold-note">threshold 0.8</div>
+  </div>
+  <div class="metric-box fail">
+    <div class="label">Context Precision</div>
+    <div class="value">0.283</div>
+    <div class="threshold-note">threshold 0.75</div>
+  </div>
+  <div class="metric-box">
+    <div class="label">Answer Correctness</div>
+    <div class="value">0.245</div>
+    <div class="threshold-note">no threshold set</div>
+  </div>
+</div>
+
+<h2>Per-Question Results</h2>
+<table>
+  <tr>
+    <th>ID</th><th>Ticker</th><th>Difficulty</th><th>Question</th>
+    <th>Faith</th><th>Rel</th><th>CtxPrec</th><th>Correct</th><th>Revisions</th><th>Latency</th>
+  </tr>
+  <tr class="fail">
+    <td><code>aapl_001</code></td>
+    <td>AAPL</td>
+    <td>easy</td>
+    <td class="q-text">Which Apple product categories generated the most net sales in 2024, and what does that say about its revenue mix?</td>
+    <td>0.37</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>0.31</td>
+    <td>2</td>
+    <td>109910ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>aapl_002</code></td>
+    <td>AAPL</td>
+    <td>medium</td>
+    <td class="q-text">How does Apple define its reportable segments, and how does management evaluate segment performance?</td>
+    <td>0.44</td>
+    <td>0.00</td>
+    <td>1.00</td>
+    <td>0.30</td>
+    <td>2</td>
+    <td>107994ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>aapl_003</code></td>
+    <td>AAPL</td>
+    <td>hard</td>
+    <td class="q-text">What supply chain and macroeconomic risks does Apple emphasize for its global business?</td>
+    <td>0.57</td>
+    <td>0.88</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>2</td>
+    <td>170789ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>msft_001</code></td>
+    <td>MSFT</td>
+    <td>easy</td>
+    <td class="q-text">How large was Microsoft&#x27;s Microsoft Cloud business in fiscal 2024, and what drove its growth?</td>
+    <td>0.75</td>
+    <td>0.00</td>
+    <td>0.58</td>
+    <td>0.53</td>
+    <td>2</td>
+    <td>191798ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>msft_002</code></td>
+    <td>MSFT</td>
+    <td>medium</td>
+    <td class="q-text">How is Microsoft using AI across both productivity software and cloud infrastructure?</td>
+    <td>0.42</td>
+    <td>0.74</td>
+    <td>0.33</td>
+    <td>0.45</td>
+    <td>2</td>
+    <td>172863ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>msft_003</code></td>
+    <td>MSFT</td>
+    <td>hard</td>
+    <td class="q-text">How does Microsoft&#x27;s governance structure oversee cybersecurity risk?</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>0.33</td>
+    <td>0.00</td>
+    <td>2</td>
+    <td>299274ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>googl_001</code></td>
+    <td>GOOGL</td>
+    <td>easy</td>
+    <td class="q-text">What revenue did Alphabet generate from Google Services, Google Cloud, and Other Bets in 2024?</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>0.34</td>
+    <td>2</td>
+    <td>320715ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>googl_002</code></td>
+    <td>GOOGL</td>
+    <td>medium</td>
+    <td class="q-text">How is Alphabet positioning AI across consumer products and Google Cloud?</td>
+    <td>0.80</td>
+    <td>0.00</td>
+    <td>1.00</td>
+    <td>0.48</td>
+    <td>2</td>
+    <td>304962ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>googl_003</code></td>
+    <td>GOOGL</td>
+    <td>hard</td>
+    <td class="q-text">Why are traffic acquisition costs and privacy investigations important risks for Alphabet?</td>
+    <td>0.12</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>0.15</td>
+    <td>2</td>
+    <td>327544ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>jpm_001</code></td>
+    <td>JPM</td>
+    <td>easy</td>
+    <td class="q-text">What are JPMorgan Chase&#x27;s four main business segments, and what does each broadly do?</td>
+    <td>0.47</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>0.29</td>
+    <td>2</td>
+    <td>331930ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>jpm_002</code></td>
+    <td>JPM</td>
+    <td>medium</td>
+    <td class="q-text">Which JPMorgan business segments generated the most revenue in 2024, and how did they rank?</td>
+    <td>0.61</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>0.14</td>
+    <td>2</td>
+    <td>359606ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>jpm_003</code></td>
+    <td>JPM</td>
+    <td>hard</td>
+    <td class="q-text">What do JPMorgan&#x27;s 2024 credit loss figures suggest about the firm&#x27;s risk environment?</td>
+    <td>0.67</td>
+    <td>0.00</td>
+    <td>1.00</td>
+    <td>0.00</td>
+    <td>2</td>
+    <td>390080ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>tsla_001</code></td>
+    <td>TSLA</td>
+    <td>easy</td>
+    <td class="q-text">How was Tesla&#x27;s 2024 revenue mix split across automotive, energy, and services?</td>
+    <td>0.31</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>0.36</td>
+    <td>2</td>
+    <td>327160ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>tsla_002</code></td>
+    <td>TSLA</td>
+    <td>medium</td>
+    <td class="q-text">What risks does Tesla disclose around Elon Musk and Autopilot/FSD?</td>
+    <td>0.38</td>
+    <td>0.91</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>2</td>
+    <td>328995ms</td>
+  </tr>
+  <tr class="fail">
+    <td><code>tsla_003</code></td>
+    <td>TSLA</td>
+    <td>hard</td>
+    <td class="q-text">How is Tesla expanding manufacturing and energy storage capacity to support growth?</td>
+    <td>0.50</td>
+    <td>0.79</td>
+    <td>0.00</td>
+    <td>0.34</td>
+    <td>2</td>
+    <td>338286ms</td>
+  </tr>
+
+</table>
+</body></html>
