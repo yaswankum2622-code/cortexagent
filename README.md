@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🧠 CortexAgent
+# :brain: CortexAgent
 
 ### Production-grade agentic RAG platform for SEC 10-K financial research
 
-*Multi-agent LLM orchestration · Hybrid retrieval · RAGAS-gated CI/CD · Red-team tested*
+*Multi-agent orchestration | Hybrid retrieval | RAGAS-gated CI/CD | Red-team tested*
 
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-FF6B6B?logo=langchain&logoColor=white)](https://langchain-ai.github.io/langgraph/)
@@ -15,175 +15,121 @@
 [![MCP](https://img.shields.io/badge/MCP-Tool%20Protocol-00D9FF)](https://modelcontextprotocol.io/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-**[📄 Documentation](./docs)** · **[🎯 Problem Statement](./docs/01_problem_statement.md)** · **[🏗️ Architecture](./docs/02_architecture.md)** · **[📊 Evaluation](./docs/05_evaluation.md)** · **[🛡️ Safety](./docs/06_safety.md)**
+**[Documentation](./docs)** | **[Problem Statement](./docs/01_problem_statement.md)** | **[Architecture](./docs/02_architecture.md)** | **[Evaluation](./docs/05_evaluation.md)** | **[Safety](./docs/06_safety.md)** | **[Deployment](./docs/DEPLOYMENT.md)**
 
 </div>
 
 ---
 
-## 🎯 What Is CortexAgent?
+## :dart: What Is CortexAgent?
 
-CortexAgent is a **production-grade agentic RAG system**
-that answers research questions about SEC 10-K filings
-using four specialized AI agents coordinated through LangGraph.
-It grounds every factual claim in cited sources,
-gates every code change through automated quality evaluation,
-and has been stress-tested against 20 adversarial attacks
-with a 100% safe baseline.
+CortexAgent is a production-grade agentic RAG system that answers research questions about SEC 10-K filings using four specialized AI agents coordinated through LangGraph. It grounds every factual claim in cited filing chunks, routes work through a Critic review loop before returning an answer, and treats model quality like a release gate instead of a vibe check.
 
-**Ask it a question** like
-*"What are Apple's main business segments in fiscal 2024?"*
-and it will retrieve the relevant 10-K sections,
-extract structured findings,
-draft a Markdown report with inline citations,
-and have a Critic agent verify the output before it reaches you.
+Ask a question like `What are Apple's main business segments in fiscal 2024?` and the system retrieves the relevant 10-K sections, extracts structured findings, drafts a research report, scores the result for quality, and exposes the evidence trail in the UI.
 
-> This project was built end-to-end in three days as a portfolio piece
-> to demonstrate production AI engineering:
-> not just model calls,
-> but the surrounding infrastructure of evaluation,
-> safety,
-> cost engineering,
-> and observability that real teams ship.
+This repo was built as a flagship portfolio project for production AI engineering. The point is not only the model call. The point is the surrounding system: retrieval quality, evaluation, safety, observability, cost control, deployment, and operator-facing tooling.
 
 ---
 
-## ⚡ Headline Results
+## :zap: Headline Results
 
-<table>
-<tr>
-<th align="left">Dimension</th>
-<th align="left">Result</th>
-<th align="left">Details</th>
-</tr>
-<tr>
-<td><strong>🛡️ Red-Team Safety</strong></td>
-<td><strong>20 / 20 safe (100%)</strong></td>
-<td>0 HIGH severity failures across 7 attack categories · <a href="./evaluation/red_team_report_baseline.html">Full report</a></td>
-</tr>
-<tr>
-<td><strong>📊 RAGAS Evaluation</strong></td>
-<td><strong>+28% faithfulness, +59% correctness</strong></td>
-<td>Baseline → v3 via retrieval upgrades · <a href="./docs/05_evaluation.md">Iteration story</a></td>
-</tr>
-<tr>
-<td><strong>💰 Cost per Query</strong></td>
-<td><strong>~$0.05 – $0.15</strong></td>
-<td>10-20× cheaper than naive all-Sonnet routing · <a href="./docs/07_cost_engineering.md">Cost engineering</a></td>
-</tr>
-<tr>
-<td><strong>🔁 Provider Resilience</strong></td>
-<td><strong>3-tier cascading fallback</strong></td>
-<td>Gemini → Groq → Claude with automatic failover</td>
-</tr>
-<tr>
-<td><strong>📚 Knowledge Base</strong></td>
-<td><strong>932 chunks indexed</strong></td>
-<td>5 companies (AAPL, MSFT, GOOGL, JPM, TSLA), 2024 10-K filings</td>
-</tr>
-<tr>
-<td><strong>🔌 Tool Integration</strong></td>
-<td><strong>MCP-compliant</strong></td>
-<td>Web search, SQL, calendar · Anthropic protocol</td>
-</tr>
-</table>
+| Dimension | Result | Details |
+|---|---|---|
+| Red-team safety | **20 / 20 safe (100%)** | `0` HIGH severity failures across 7 attack categories. [Full report](./evaluation/red_team_report_baseline.html) |
+| RAGAS evaluation | **+28% faithfulness, +59% correctness** | Baseline to v3 after retrieval and reranking upgrades. [Iteration story](./docs/05_evaluation.md) |
+| Cost per query | **~$0.05 - $0.15** | Lower-cost routed stack instead of naive premium-model-everywhere usage. [Cost engineering](./docs/07_cost_engineering.md) |
+| Provider resilience | **3-tier cascading fallback** | Gemini -> Groq -> Claude, with automatic failover |
+| Knowledge base | **932 chunks indexed** | AAPL, MSFT, GOOGL, JPM, and TSLA 2024 10-K filings |
+| Tool integration | **MCP-compliant** | Web search, SQL, and calendar tools via MCP-style contracts |
 
 ---
 
-## 🖼️ Product Walkthrough
+## :camera: Product Walkthrough
 
-These three screenshots tell the story better than a generic gallery because they follow one real run end to end:
-query submission, critic validation, and source-grounded evidence.
-The example below is a live query about Apple's 2024 business segments running through the full Researcher → Analyst → Writer → Critic flow.
+The README now tells the story as one complete run, not a loose gallery. These five screenshots walk from the opening product surface to the final audit trail so a recruiter can understand the system before reading a line of code.
 
-<table>
-<tr>
-<td>
-<img src="./docs/images/01_dashboard_hero.png" alt="CortexAgent research console showing query input, four-agent flow, revision status, latency, and citations" width="100%" />
-<br />
-<strong>1. Live research run overview</strong>
-<br />
-The first screen shows the product surface in one glance: API health, indexed chunk count, provider availability, running cost, the four-agent pipeline, and run-level metrics like thread ID, revisions, latency, and citation count. This is the fastest way to understand that CortexAgent is an orchestrated system, not a single prompt box.
-</td>
-</tr>
-<tr>
-<td>
-<img src="./docs/images/02_agent_flow_active.png" alt="CortexAgent critic review tab showing approve decision and faithfulness, completeness, and citation quality scores" width="100%" />
-<br />
-<strong>2. Critic review before the answer ships</strong>
-<br />
-The second screen is the key differentiator. After the report is drafted, the Critic agent scores faithfulness, completeness, and citation quality, surfaces its feedback, and exposes the retrieval-grade payload. That makes the quality loop visible to recruiters and demonstrates that the system can inspect its own work before returning an answer.
-</td>
-</tr>
-<tr>
-<td>
-<img src="./docs/images/03_report_complete.png" alt="CortexAgent citations tab showing retrieved chunks with chunk IDs and section-aware references from the Apple 2024 10-K" width="100%" />
-<br />
-<strong>3. Evidence, not just output</strong>
-<br />
-The third screen shows the citations tab with the exact chunk IDs, filing sections, and text previews that grounded the answer. Instead of saying "trust the model," the UI shows where each claim came from inside the 10-K corpus. That is what makes the project useful for finance research and defensible in interviews.
-</td>
-</tr>
-</table>
+### 1. Opening state: product surface and live system status
 
-The full audit trail is also available in the product and captured in [docs/images/04_audit_trail.png](./docs/images/04_audit_trail.png), but the three screens above explain the system faster for a first-time reader.
+<div align="center">
+  <img src="./docs/images/00_dashboard_opening.png" alt="CortexAgent opening dashboard state with product hero, live index, provider status, session spend, and research console" width="92%" />
+</div>
+
+The opening screen does more than look polished. It immediately communicates what the product is, how many chunks are indexed, whether the API is healthy, which providers are online, and how much the current session has spent. That makes the dashboard feel like a real product surface instead of a thin prompt box.
+
+### 2. Live run: the four-agent pipeline in motion
+
+<div align="center">
+  <img src="./docs/images/01_dashboard_hero.png" alt="CortexAgent research console showing the Researcher, Analyst, Writer, and Critic pipeline with live run metrics" width="92%" />
+</div>
+
+This is the first moment the system shows its architecture in action. You can see the user query, the orchestrated Researcher -> Analyst -> Writer -> Critic flow, revision count, total latency, and citation volume for a real Apple 2024 filing question. It makes the agent graph tangible.
+
+### 3. Critic review: quality is inspected before the answer ships
+
+<div align="center">
+  <img src="./docs/images/02_agent_flow_active.png" alt="CortexAgent critic review tab showing approve decision with faithfulness, completeness, citation quality, and retrieval-grade payload" width="92%" />
+</div>
+
+This screen is the key differentiator. Instead of blindly trusting the draft, CortexAgent surfaces the Critic decision, quality scores, and retrieval-grade payload. That makes the revision loop visible and shows that the system can evaluate its own output before it reaches the user.
+
+### 4. Citations: the answer is grounded in filing evidence
+
+<div align="center">
+  <img src="./docs/images/03_report_complete.png" alt="CortexAgent citations tab showing chunk IDs, section-aware references, and text snippets from the Apple 2024 10-K" width="92%" />
+</div>
+
+The citations view is where the project earns trust. Each returned answer is backed by exact chunk identifiers, filing sections, and excerpt previews from the underlying 10-K corpus. That is what turns the system from a generic chatbot into a usable financial research tool.
+
+### 5. Audit trail: every model step is inspectable after the run
+
+<div align="center">
+  <img src="./docs/images/04_audit_trail.png" alt="CortexAgent audit trail tab showing per-step timestamps, models used, prompt inputs, and output summaries" width="92%" />
+</div>
+
+The final screen closes the loop. It shows the per-step model trace, timestamps, and summarized inputs and outputs for each agent pass. This is the operational view that matters when debugging failures, explaining cost, or demonstrating observability in an interview.
 
 ---
 
-## 🏗️ Architecture
+## :building_construction: Architecture
 
-CortexAgent separates concerns across six distinct layers.
-Every query flows through multi-agent orchestration,
-hybrid retrieval,
-cascading LLM fallback,
-and observability.
+CortexAgent separates the product into six layers: UI, API, orchestration, retrieval, evaluation, and operational instrumentation.
 
 ```mermaid
 graph TB
-    User[👤 User Query] --> UI[🖥️ Streamlit Dashboard<br/>localhost:8501]
-    UI --> API[⚡ FastAPI Backend<br/>localhost:8000]
-    API --> Orch[🎯 LangGraph Orchestrator<br/>State Machine + Checkpointer]
+    User[User Query] --> UI[Streamlit Dashboard<br/>localhost:8501]
+    UI --> API[FastAPI Backend<br/>localhost:8000]
+    API --> Orch[LangGraph Orchestrator<br/>State machine + revision loop]
 
-    Orch --> R[🔬 Researcher<br/>Gemini 2.5 Flash Lite]
-    R --> A[📊 Analyst<br/>Gemini 2.5 Flash Lite]
-    A --> W[✍️ Writer<br/>Claude 4.5]
-    W --> C[🎯 Critic<br/>Claude Sonnet 4.5]
+    Orch --> R[Researcher<br/>Gemini 2.5 Flash Lite]
+    R --> A[Analyst<br/>Gemini 2.5 Flash Lite]
+    A --> W[Writer<br/>Claude Haiku 4.5]
+    W --> C[Critic<br/>Claude Sonnet 4.5]
 
-    C -->|approve| Final[📄 Cited Report]
-    C -->|revise max 2×| R
+    C -->|approve| Final[Final Cited Report]
+    C -->|revise max 2x| R
 
-    R --> Hybrid[🔎 Hybrid Retrieval]
-    Hybrid --> BM25[BM25 Sparse]
-    Hybrid --> Dense[ChromaDB Dense<br/>all-MiniLM-L6-v2]
+    R --> Hybrid[Hybrid Retrieval]
+    Hybrid --> BM25[BM25 sparse retrieval]
+    Hybrid --> Dense[ChromaDB dense retrieval<br/>all-MiniLM-L6-v2]
     BM25 --> RRF[Reciprocal Rank Fusion]
     Dense --> RRF
-    RRF --> Rerank[BGE-Reranker-v2-m3<br/>Cross-Encoder]
+    RRF --> Rerank[BGE reranker v2 m3]
     Rerank --> R
 
-    Orch -.observability.-> Audit[📋 Audit Trail]
-    Orch -.observability.-> Cost[💰 Cost Tracker]
-
-    API -.quality gate.-> RAGAS[🎯 RAGAS CI Gate<br/>GitHub Actions]
-    API -.safety gate.-> RedTeam[🛡️ Red-Team Suite<br/>20 prompts, 7 categories]
-
+    Orch -.-> Audit[Audit Trail]
+    Orch -.-> Cost[Cost Tracker]
+    API -.-> RAGAS[RAGAS CI Gate]
+    API -.-> RedTeam[Red-team Suite]
     Final --> UI
-
-    classDef agent fill:#0F4C75,stroke:#00D9FF,color:#fff
-    classDef infra fill:#1A1A2E,stroke:#7C3AED,color:#fff
-    classDef safety fill:#065F46,stroke:#10B981,color:#fff
-    class R,A,W,C agent
-    class Hybrid,BM25,Dense,RRF,Rerank,Orch infra
-    class RAGAS,RedTeam safety
 ```
 
-**See the complete architecture deep-dive →**
-[docs/02_architecture.md](./docs/02_architecture.md)
+**Deep dive:** [docs/02_architecture.md](./docs/02_architecture.md)
 
 ---
 
-## 🚀 Quick Start
+## :rocket: Quick Start
 
-### Option 1 — Docker Compose (recommended)
+### Option 1 - Docker Compose (recommended)
 
 Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
@@ -191,433 +137,287 @@ Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 git clone https://github.com/yaswankum2622-code/cortexagent.git
 cd cortexagent
 cp .env.example .env
-# Edit .env and add your API keys (see table below)
+# Edit .env and add your API keys
 
 docker-compose up -d
-docker-compose exec api python -m rag.ingestion  # one-time, ~5 min
+docker-compose exec api python -m rag.ingestion
 ```
 
-Then open http://localhost:8501
+Then open `http://localhost:8501`.
 
-Full deployment guide with Railway/Fly.io instructions: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
+Full deployment guide: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
 
-### Option 2 — Local Development
+### Option 2 - Local Development
 
-**Prerequisites:** Python 3.11,
-[uv](https://github.com/astral-sh/uv),
-and valid API credentials for Anthropic,
-Google AI,
-and Groq.
+Prerequisites:
+
+- Python 3.11
+- [uv](https://github.com/astral-sh/uv)
+- Anthropic, Google AI, and Groq credentials
 
 ```bash
-# 1. Clone and set up environment
 git clone https://github.com/yaswankum2622-code/cortexagent.git
 cd cortexagent
 uv venv
 .venv\Scripts\Activate.ps1
 # source .venv/bin/activate  # macOS/Linux
+
 uv pip install -e ".[dev]"
-
-# 2. Configure API keys
 cp .env.example .env
-# Add: ANTHROPIC_API_KEY, GEMINI_API_KEY, GROQ_API_KEY, SEC_IDENTITY
 
-# 3. Ingest the SEC 10-K corpus (one-time)
 python -m rag.ingestion
-
-# 4. Verify setup
-python config/settings.py
-python -m agents._llm_client
-
-# 5. Start the API server
 python -m api.main
-
-# 6. In a new terminal, start the dashboard
 streamlit run dashboard/app.py --server.address 0.0.0.0
-
-# 7. Open http://localhost:8501
 ```
+
+You can also use the helper scripts:
+
+- PowerShell: `.\scripts\setup.ps1`
+- Bash: `bash scripts/setup.sh`
 
 ### Required API Keys
 
 | Provider | Purpose | Get It At |
 |---|---|---|
-| **Anthropic** | Claude Sonnet / Haiku for critique, writing, and evaluation | [console.anthropic.com](https://console.anthropic.com/) |
-| **Google AI** | Gemini 2.5 Flash Lite for Researcher, Analyst, Self-RAG | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) |
-| **Groq** | Llama 3.3 70B fallback tier | [console.groq.com](https://console.groq.com/) |
-| **SEC EDGAR** | No key required — only a compliant identity string | Set `SEC_IDENTITY` in `.env` |
+| Anthropic | Critic, Writer, and RAGAS judge | [console.anthropic.com](https://console.anthropic.com/) |
+| Google AI | Researcher, Analyst, and Self-RAG | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) |
+| Groq | Fallback LLM tier for resilience and latency | [console.groq.com](https://console.groq.com/) |
+| SEC EDGAR | Identity string only, no signup key | Set `SEC_IDENTITY` in `.env` |
 
-> **Cost tip:** a single research query typically lands in the
-> `~$0.05-$0.15` range,
-> the full RAGAS suite is on the order of dollars rather than cents,
-> and the red-team suite is intentionally cheap because it tests the
-> behavioral contract directly instead of the full orchestrator.
+> Cost tip: a typical research query lands in the `$0.05-$0.15` range, while full offline evaluation and red-team runs are intentionally separated so development feedback stays affordable.
 
 ---
 
-## 🛠️ Tech Stack
+## :clapper: Quick Demo
 
-<table>
-<tr>
-<th>Layer</th>
-<th>Technologies</th>
-</tr>
-<tr>
-<td><strong>LLM & Agents</strong></td>
-<td>LangGraph · langchain-anthropic · langchain-google-genai · Groq SDK · tenacity</td>
-</tr>
-<tr>
-<td><strong>Retrieval</strong></td>
-<td>ChromaDB · rank-bm25 · sentence-transformers (all-MiniLM-L6-v2) · BGE-reranker-v2-m3 · llama-index · edgartools</td>
-</tr>
-<tr>
-<td><strong>API & UI</strong></td>
-<td>FastAPI · Uvicorn · Pydantic v2 · Streamlit (custom dark theme) · httpx</td>
-</tr>
-<tr>
-<td><strong>Evaluation</strong></td>
-<td>RAGAS · HuggingFace Datasets · pytest · GitHub Actions</td>
-</tr>
-<tr>
-<td><strong>Observability</strong></td>
-<td>Python logging · in-memory audit trail · cost tracker</td>
-</tr>
-<tr>
-<td><strong>Packaging</strong></td>
-<td>uv · pyproject.toml · Docker Compose</td>
-</tr>
-</table>
+Want to show the system end-to-end without opening the full UI first?
 
-**Full technology rationale →**
-[docs/08_tech_stack.md](./docs/08_tech_stack.md)
+```bash
+python scripts/run_demo.py
+```
+
+That command runs two representative queries through the full multi-agent pipeline and prints a screen-share-friendly summary of latency, model usage, critique scores, citations, and estimated cost.
+
+Useful variants:
+
+- `python scripts/run_demo.py --single`
+- `make demo`
+- `make demo-single`
+
+If you want the full stack instead:
+
+```bash
+# Terminal 1
+python -m api.main
+
+# Terminal 2
+streamlit run dashboard/app.py --server.address 0.0.0.0
+
+# Terminal 3
+python scripts/find_my_ip.py
+```
+
+Then open `http://localhost:8501` or the LAN URL printed by the helper script.
 
 ---
 
-## 📁 Project Structure
+## :toolbox: Tech Stack
+
+| Layer | Technologies |
+|---|---|
+| LLM and agents | LangGraph, langchain-anthropic, langchain-google-genai, Groq SDK, tenacity |
+| Retrieval | ChromaDB, rank-bm25, sentence-transformers, BGE reranker, llama-index, edgartools |
+| API and UI | FastAPI, Uvicorn, Pydantic v2, Streamlit, httpx |
+| Evaluation | RAGAS, Hugging Face Datasets, pytest, GitHub Actions |
+| Observability | Structured logging, audit trail, cost tracker |
+| Packaging | uv, Docker, Docker Compose, Makefile |
+
+**Rationale:** [docs/08_tech_stack.md](./docs/08_tech_stack.md)
+
+---
+
+## :open_file_folder: Project Structure
 
 ```text
 cortexagent/
-├── agents/                    # LangGraph multi-agent orchestrator
-│   ├── orchestrator.py        #   └─ State machine wiring (Researcher→Analyst→Writer→Critic)
-│   ├── researcher.py          #   └─ Retrieval + Self-RAG grading (+ optional MCP tools)
-│   ├── analyst.py             #   └─ Structured finding extraction (JSON mode)
-│   ├── writer.py              #   └─ Markdown report generation with inline citations
-│   ├── critic.py              #   └─ Quality scoring + approve/revise decision
-│   └── _llm_client.py         #   └─ Unified client with 3-provider cascading fallback
-│
-├── rag/                       # Retrieval-Augmented Generation pipeline
-│   ├── ingestion.py           #   └─ SEC EDGAR download + section-aware chunking
-│   ├── retrieval.py           #   └─ Hybrid retrieval: BM25 + Dense + RRF + BGE reranker
-│   └── self_rag.py            #   └─ Auto-refinement loop for low-quality retrievals
-│
-├── api/                       # FastAPI backend
-│   ├── main.py                #   └─ /research, /research/stream, /audit, /health, /cost, /docs
-│   ├── schemas.py             #   └─ Pydantic request/response models
-│   └── cost_tracker.py        #   └─ Thread-safe per-model spend accumulation
-│
-├── dashboard/                 # Streamlit UI
-│   ├── app.py                 #   └─ Animated agent flow, metrics, tabs, cost sidebar
-│   └── style.css              #   └─ Custom dark theme and motion system
-│
-├── tools/                     # MCP tool implementations
-│   ├── mcp_definitions.py     #   └─ Tool registry
-│   ├── web_search_tool.py     #   └─ DuckDuckGo integration
-│   ├── database_tool.py       #   └─ SELECT-only SQL
-│   └── calendar_tool.py       #   └─ Mock calendar booking
-│
-├── evaluation/                # RAGAS and red-team assets
-│   ├── ragas_eval.py
-│   ├── benchmark_runner.py
-│   ├── red_team.py
-│   ├── golden_dataset.json
-│   ├── adversarial_prompts.json
-│   └── report_final.html
-│
-├── config/                    # Central configuration
-│   ├── settings.py
-│   └── logging_setup.py
-│
-├── .github/workflows/
-│   └── ragas_gate.yml         # PR-blocking RAGAS quality gate
-│
-├── docs/                      # Technical documentation and ADRs
-│   ├── 01_problem_statement.md
-│   ├── 02_architecture.md
-│   ├── 03_agents.md
-│   ├── 04_retrieval.md
-│   ├── 05_evaluation.md
-│   ├── 06_safety.md
-│   ├── 07_cost_engineering.md
-│   ├── 08_tech_stack.md
-│   ├── 09_innovations.md
-│   ├── 10_future_work.md
-│   ├── adr/
-│   │   ├── ADR-001-langgraph-vs-autogen.md
-│   │   ├── ADR-002-hybrid-retrieval.md
-│   │   └── ADR-003-direct-redteam-testing.md
-│   ├── images/
-│   └── INTERVIEW_PREP.md
-│
-├── scripts/
-│   └── find_my_ip.py          # LAN access helper for cross-device demos
-│
-├── data/                      # Data directories (gitignored)
-├── tests/
-├── pyproject.toml
-├── uv.lock
-├── docker-compose.yml
-└── README.md
+|-- agents/                       # LangGraph orchestration and agent implementations
+|   |-- orchestrator.py
+|   |-- researcher.py
+|   |-- analyst.py
+|   |-- writer.py
+|   |-- critic.py
+|   `-- _llm_client.py
+|-- rag/                          # Chunking, retrieval, reranking, self-RAG
+|   |-- ingestion.py
+|   |-- retrieval.py
+|   |-- reranker.py
+|   `-- self_rag.py
+|-- api/                          # FastAPI backend and schemas
+|   |-- main.py
+|   |-- schemas.py
+|   `-- cost_tracker.py
+|-- dashboard/                    # Streamlit dashboard and theme
+|   |-- app.py
+|   `-- style.css
+|-- tools/                        # MCP-style tools
+|   |-- mcp_definitions.py
+|   |-- web_search_tool.py
+|   |-- database_tool.py
+|   `-- calendar_tool.py
+|-- evaluation/                   # RAGAS, red-team, baselines, datasets
+|   |-- ragas_eval.py
+|   |-- benchmark_runner.py
+|   |-- red_team.py
+|   |-- golden_dataset.json
+|   |-- golden_dataset_ci.json
+|   |-- adversarial_prompts.json
+|   |-- report_final.html
+|   `-- red_team_report_baseline.html
+|-- docs/                         # Technical documentation, ADRs, screenshots
+|   |-- 01_problem_statement.md
+|   |-- 02_architecture.md
+|   |-- 03_agents.md
+|   |-- 04_retrieval.md
+|   |-- 05_evaluation.md
+|   |-- 06_safety.md
+|   |-- 07_cost_engineering.md
+|   |-- 08_tech_stack.md
+|   |-- 09_innovations.md
+|   |-- 10_future_work.md
+|   |-- DEPLOYMENT.md
+|   |-- INTERVIEW_PREP.md
+|   |-- adr/
+|   `-- images/
+|-- scripts/                      # Setup, demo, and networking helpers
+|   |-- setup.sh
+|   |-- setup.ps1
+|   |-- find_my_ip.py
+|   `-- run_demo.py
+|-- .github/
+|   |-- ISSUE_TEMPLATE/
+|   |-- pull_request_template.md
+|   `-- workflows/
+|-- CHANGELOG.md
+|-- CONTRIBUTING.md
+|-- CODE_OF_CONDUCT.md
+|-- Dockerfile
+|-- Dockerfile.streamlit
+|-- docker-compose.yml
+|-- Makefile
+|-- pyproject.toml
+`-- README.md
 ```
 
 ---
 
-## 📚 Documentation
+## :books: Documentation
 
-CortexAgent includes comprehensive
-technical documentation across
-14 files and **14,000+ words**.
-If you're evaluating this as a
-portfolio piece,
-start with the documents marked ⭐.
+Start here if you are reading the repo as a portfolio artifact:
 
-### Core Documentation
+- [docs/01_problem_statement.md](./docs/01_problem_statement.md) - target user, pain point, and product framing
+- [docs/02_architecture.md](./docs/02_architecture.md) - system design and data flow
+- [docs/03_agents.md](./docs/03_agents.md) - agent contracts and responsibilities
+- [docs/04_retrieval.md](./docs/04_retrieval.md) - chunking, retrieval, and reranking
+- [docs/05_evaluation.md](./docs/05_evaluation.md) - RAGAS iteration story and lessons learned
+- [docs/06_safety.md](./docs/06_safety.md) - red-team methodology and baseline results
+- [docs/07_cost_engineering.md](./docs/07_cost_engineering.md) - provider routing and spend control
+- [docs/08_tech_stack.md](./docs/08_tech_stack.md) - library choices and tradeoffs
+- [docs/09_innovations.md](./docs/09_innovations.md) - what makes this more than tutorial RAG
+- [docs/10_future_work.md](./docs/10_future_work.md) - roadmap
+- [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) - local Docker and hosted deployment guidance
+- [docs/INTERVIEW_PREP.md](./docs/INTERVIEW_PREP.md) - interview narrative and demo script
 
-- ⭐ [**01_problem_statement.md**](./docs/01_problem_statement.md) —
-  who has this problem,
-  why it is hard,
-  and why the approach matters
-- ⭐ [**02_architecture.md**](./docs/02_architecture.md) —
-  full system architecture with flow diagrams
-- [03_agents.md](./docs/03_agents.md) —
-  deep dive on each of the four agents
-- [04_retrieval.md](./docs/04_retrieval.md) —
-  hybrid retrieval,
-  reranking,
-  and section-aware chunking
-- ⭐ [**05_evaluation.md**](./docs/05_evaluation.md) —
-  the RAGAS iteration story and the Goodhart's Law lesson
-- ⭐ [**06_safety.md**](./docs/06_safety.md) —
-  red-team methodology and 100% safe baseline
-- [07_cost_engineering.md](./docs/07_cost_engineering.md) —
-  provider cascade and model-routing decisions
-- [08_tech_stack.md](./docs/08_tech_stack.md) —
-  every major library and why it was chosen
-- [09_innovations.md](./docs/09_innovations.md) —
-  what distinguishes this from tutorial RAG systems
-- [10_future_work.md](./docs/10_future_work.md) —
-  roadmap from portfolio artifact to production system
+Architecture decision records:
 
-### Architectural Decision Records
+- [ADR-001 - LangGraph over AutoGen](./docs/adr/ADR-001-langgraph-vs-autogen.md)
+- [ADR-002 - Hybrid Retrieval](./docs/adr/ADR-002-hybrid-retrieval.md)
+- [ADR-003 - Direct Red-Team Testing](./docs/adr/ADR-003-direct-redteam-testing.md)
 
-- [ADR-001 — LangGraph over AutoGen](./docs/adr/ADR-001-langgraph-vs-autogen.md)
-- [ADR-002 — Hybrid Retrieval over Single-Method](./docs/adr/ADR-002-hybrid-retrieval.md)
-- [ADR-003 — Direct LLM Testing for Red-Team](./docs/adr/ADR-003-direct-redteam-testing.md)
+Repository operations:
+
+- [CHANGELOG.md](./CHANGELOG.md)
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 
 ---
 
-## 💡 Why I Built This
+## :bulb: Why I Built This
 
-I wanted a portfolio project that
-demonstrated **production AI engineering**,
-not just API calls to a model.
+I wanted a project that demonstrated production AI engineering, not just model usage. A lot of GenAI demos stop at document embeddings plus a prompt. That is not the hard part in a serious system. The hard part is proving that retrieval is grounded, behavior is testable, regressions are caught early, and the whole stack can be explained under pressure.
 
-The conventional tutorial pattern —
-"embed documents,
-query ChromaDB,
-prompt a frontier model,
-done" —
-does not reflect what real AI teams
-ship.
+SEC 10-K research is a good domain for that. The data is public, structurally rich, and unforgiving. If a model invents a metric, a citation, or a management claim, the failure is obvious and unacceptable. That makes it a much better proving ground than generic Q and A.
 
-Production systems need evaluation
-infrastructure that blocks
-regressions,
-safety testing that verifies
-behavioral contracts,
-cost engineering that keeps unit
-economics viable,
-and observability that makes failures
-debuggable.
-
-CortexAgent was my attempt to build
-all of that at once,
-end to end,
-in a compact but real system.
-
-I chose SEC 10-K research as the
-domain because the data is public,
-structurally rich,
-and unforgiving.
-
-Hallucinating a marketing paragraph is
-annoying.
-
-Hallucinating a revenue figure or a
-fake filing citation is unacceptable.
-
-That made it a good domain for
-demonstrating retrieval quality,
-safety behavior,
-and the engineering discipline around
-both.
-
-The build was also humbling.
-
-I hit classic failure modes:
-Goodhart's Law during RAGAS
-iteration,
-a red-team architecture that was
-roughly 600× too expensive before it
-was refactored,
-and multi-provider quota exhaustion
-that made fallback behavior very
-visible during live testing.
-
-Those are exactly the kinds of
-lessons I wanted this project to
-surface.
+The build also surfaced real engineering lessons: Goodhart's Law during RAGAS tuning, a red-team implementation that was initially far too expensive, and provider quota exhaustion that forced fallback logic to become a first-class feature rather than a line item.
 
 ---
 
-## 🪞 What I'd Do Differently
+## :mirror: What I'd Do Differently
 
-Honest reflection from the build:
-
-- **Recognize Goodhart's Law faster.**
-  I spent one full RAGAS iteration
-  optimizing answer relevancy and
-  damaged faithfulness and context
-  precision in the process.
-  Reverting to the v3 baseline was the
-  right call,
-  but I should have seen that sooner.
-
-- **Test at the right layer from the start.**
-  My first red-team implementation ran
-  the full multi-agent orchestrator
-  per adversarial prompt.
-  It was correct in principle and
-  wrong in economics.
-  The direct-contract test harness was
-  dramatically better.
-
-- **Budget more deliberately.**
-  I let evaluation spend hit premium
-  providers too freely at first,
-  which created avoidable friction
-  during live demos.
-
-- **Write docs incrementally.**
-  The final documentation set is
-  strong,
-  but it would have been even better
-  if each section had been written
-  alongside the build step that
-  inspired it.
+- I would recognize metric gaming faster. One evaluation iteration improved answer relevance while hurting faithfulness and context precision, and the correct move was to revert sooner.
+- I would design the red-team harness at the contract layer from day one instead of first running the full orchestrator per adversarial prompt.
+- I would set clearer daily spend ceilings during evaluation runs to avoid burning premium provider credits during demo prep.
+- I would write each major doc alongside the component build instead of batching the documentation late.
 
 ---
 
-## 🗺️ Roadmap
+## :world_map: Roadmap
 
-Tracked in detail in
-[docs/10_future_work.md](./docs/10_future_work.md).
-At a high level:
+The detailed roadmap lives in [docs/10_future_work.md](./docs/10_future_work.md). The short version:
 
-**Layer 1 — Reliability**
-
-PostgreSQL audit persistence ·
-OpenTelemetry distributed tracing ·
-provider circuit breakers ·
-structured JSON logging
-
-**Layer 2 — Performance**
-
-Semantic caching (Redis) ·
-end-to-end streaming ·
-multi-worker Uvicorn ·
-pre-computed reranker paths
-
-**Layer 3 — Capabilities**
-
-Expand corpus to the S&P 500 ·
-multi-year filings ·
-conversational follow-ups ·
-deeper MCP tool wiring
-
-**Layer 4 — Deployment**
-
-Full Docker Compose hardening ·
-cloud hosting ·
-authentication ·
-rate limiting
-
-**Layer 5 — Evaluation Maturity**
-
-100+ question golden set ·
-cheaper judge model ·
-human calibration ·
-HarmBench and JailbreakBench coverage
+- Layer 1: Postgres audit persistence, structured JSON logs, circuit breakers, tracing
+- Layer 2: Redis semantic caching, streaming, multi-worker serving, retrieval performance work
+- Layer 3: Larger corpus coverage, multi-year filings, conversational follow-ups, deeper MCP usage
+- Layer 4: Hosted deployment, authentication, rate limiting, stronger operational hardening
+- Layer 5: Bigger golden datasets, cheaper judge strategy, human calibration, broader safety benchmarks
 
 ---
 
-## 🤝 Contributing
+## :handshake: Contributing
 
-Contributions are welcome.
+Contributions are welcome, but this repo values coherent engineering stories over noisy drive-by edits.
 
 Before opening a PR:
 
-1. Read [`.github/CONTRIBUTING.md`](./.github/CONTRIBUTING.md)
-2. Run the local quality check:
-   `python -m evaluation.benchmark_runner --dataset evaluation/golden_dataset_ci.json --max-questions 5`
-3. Ensure the RAGAS quality gate passes
+1. Read [CONTRIBUTING.md](./CONTRIBUTING.md)
+2. Use the issue templates under [`.github/ISSUE_TEMPLATE/`](./.github/ISSUE_TEMPLATE/)
+3. Use the PR checklist in [`.github/pull_request_template.md`](./.github/pull_request_template.md)
+4. Run the most relevant local checks for your change
 
-The GitHub Actions workflow is
-intended to run RAGAS on every PR and
-block merges that regress quality
-thresholds.
+Helpful commands:
 
----
-
-## 📜 License
-
-MIT License —
-see [LICENSE](./LICENSE) for details.
-
-Built on 2024 SEC 10-K filings which
-are public disclosures.
-
-Not financial advice —
-CortexAgent is a research tool,
-not a financial advisor.
+```bash
+make test
+make ragas-ci
+make red-team
+make docker-up
+```
 
 ---
 
-## 🙏 Acknowledgments
+## :page_facing_up: License
 
-- **Anthropic**
-  for Claude and for the Model Context Protocol work
-- **Google DeepMind**
-  for Gemini and its fast lower-cost tier
-- **Groq**
-  for the fast fallback inference layer
-- **BAAI**
-  for the open-source
-  `bge-reranker-v2-m3`
-  cross-encoder
-- **LangChain team**
-  for LangGraph
-- **Explodinggradients**
-  for RAGAS
-- **SEC EDGAR**
-  for free public access to filings
+MIT License. See [LICENSE](./LICENSE).
+
+The corpus is built from public SEC filings. CortexAgent is a research system and portfolio artifact, not financial advice.
+
+---
+
+## :pray: Acknowledgments
+
+- Anthropic for Claude and MCP ecosystem work
+- Google DeepMind for Gemini and a strong lower-cost retrieval layer
+- Groq for fast fallback inference
+- BAAI for the `bge-reranker-v2-m3` cross-encoder
+- LangChain for LangGraph
+- Explodinggradients for RAGAS
+- SEC EDGAR for public filing access
 
 ---
 
 <div align="center">
 
-**Built by [Yashwanth](https://github.com/yaswankum2622-code) · Bengaluru · April 2026**
+**Built by [Yashwanth](https://github.com/yaswankum2622-code) | Bengaluru | April 2026**
 
-*If this project is useful to you, ⭐ the repo.
-It helps more than you'd think.*
+*If the repo is useful, star it. That signal matters.*
 
 </div>
