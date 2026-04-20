@@ -90,31 +90,43 @@ and have a Critic agent verify the output before it reaches you.
 
 ---
 
-## 🖼️ Visual Demo
+## 🖼️ Product Walkthrough
 
-> Screenshots from the Streamlit dashboard running against the FastAPI backend.
-> Agent flow animates in real time as each agent
-> (Researcher → Analyst → Writer → Critic)
-> completes its work.
+These three screenshots tell the story better than a generic gallery because they follow one real run end to end:
+query submission, critic validation, and source-grounded evidence.
+The example below is a live query about Apple's 2024 business segments running through the full Researcher → Analyst → Writer → Critic flow.
 
-<div align="center">
+<table>
+<tr>
+<td>
+<img src="./docs/images/01_dashboard_hero.png" alt="CortexAgent research console showing query input, four-agent flow, revision status, latency, and citations" width="100%" />
+<br />
+<strong>1. Live research run overview</strong>
+<br />
+The first screen shows the product surface in one glance: API health, indexed chunk count, provider availability, running cost, the four-agent pipeline, and run-level metrics like thread ID, revisions, latency, and citation count. This is the fastest way to understand that CortexAgent is an orchestrated system, not a single prompt box.
+</td>
+</tr>
+<tr>
+<td>
+<img src="./docs/images/02_agent_flow_active.png" alt="CortexAgent critic review tab showing approve decision and faithfulness, completeness, and citation quality scores" width="100%" />
+<br />
+<strong>2. Critic review before the answer ships</strong>
+<br />
+The second screen is the key differentiator. After the report is drafted, the Critic agent scores faithfulness, completeness, and citation quality, surfaces its feedback, and exposes the retrieval-grade payload. That makes the quality loop visible to recruiters and demonstrates that the system can inspect its own work before returning an answer.
+</td>
+</tr>
+<tr>
+<td>
+<img src="./docs/images/03_report_complete.png" alt="CortexAgent citations tab showing retrieved chunks with chunk IDs and section-aware references from the Apple 2024 10-K" width="100%" />
+<br />
+<strong>3. Evidence, not just output</strong>
+<br />
+The third screen shows the citations tab with the exact chunk IDs, filing sections, and text previews that grounded the answer. Instead of saying "trust the model," the UI shows where each claim came from inside the 10-K corpus. That is what makes the project useful for finance research and defensible in interviews.
+</td>
+</tr>
+</table>
 
-### Dashboard · Hero State
-<img src="./docs/images/01_dashboard_hero.png" alt="CortexAgent dashboard landing view with live provider status and cost tracker" width="90%" />
-
-### Agent Flow · Active Execution
-<img src="./docs/images/02_agent_flow_active.png" alt="Four-agent pipeline with Researcher agent highlighted in active state" width="90%" />
-
-### Completed Report · Cited Sources
-<img src="./docs/images/03_report_complete.png" alt="Final cited research report with inline citations to 10-K sections" width="90%" />
-
-### Audit Trail · Full Provenance
-<img src="./docs/images/04_audit_trail.png" alt="Per-agent audit trail showing timestamps, models, and latencies" width="90%" />
-
-</div>
-
-> Screenshots live under `docs/images/`
-> and are already referenced by their final repo paths.
+The full audit trail is also available in the product and captured in [docs/images/04_audit_trail.png](./docs/images/04_audit_trail.png), but the three screens above explain the system faster for a first-time reader.
 
 ---
 
@@ -171,17 +183,23 @@ graph TB
 
 ## 🚀 Quick Start
 
-### Option 1 — Docker Compose
+### Option 1 — Docker Compose (recommended)
+
+Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
 ```bash
 git clone https://github.com/yaswankum2622-code/cortexagent.git
 cd cortexagent
 cp .env.example .env
-# add your API keys
-docker-compose up
-# UI   -> http://localhost:8501
-# API  -> http://localhost:8000/docs
+# Edit .env and add your API keys (see table below)
+
+docker-compose up -d
+docker-compose exec api python -m rag.ingestion  # one-time, ~5 min
 ```
+
+Then open http://localhost:8501
+
+Full deployment guide with Railway/Fly.io instructions: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
 
 ### Option 2 — Local Development
 
