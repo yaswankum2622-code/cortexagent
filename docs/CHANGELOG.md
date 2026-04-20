@@ -80,8 +80,7 @@ First production-ready portfolio release of CortexAgent.
 
 ### Developer Experience
 
-- Added root-level `CONTRIBUTING.md`.
-- Added root-level `CODE_OF_CONDUCT.md`.
+- Added contributor guide and code of conduct.
 - Added issue templates for bug reports and feature requests.
 - Added pull request template.
 - Added `scripts/run_demo.py` for interview-style demonstrations.

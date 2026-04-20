@@ -46,7 +46,7 @@ This repo was built as a flagship portfolio project for production AI engineerin
 
 ## :camera: Product Walkthrough
 
-The README now tells the story as one complete run, not a loose gallery. These five screenshots walk from the opening product surface to the final audit trail so a recruiter can understand the system before reading a line of code.
+These five screenshots walk from the opening product surface to the final audit trail so a recruiter can understand the system before reading a line of code.
 
 ### 1. Opening state: product surface and live system status
 
@@ -284,6 +284,7 @@ cortexagent/
 |   |-- 08_tech_stack.md
 |   |-- 09_innovations.md
 |   |-- 10_future_work.md
+|   |-- CHANGELOG.md
 |   |-- DEPLOYMENT.md
 |   |-- INTERVIEW_PREP.md
 |   |-- adr/
@@ -294,12 +295,11 @@ cortexagent/
 |   |-- find_my_ip.py
 |   `-- run_demo.py
 |-- .github/
+|   |-- CODE_OF_CONDUCT.md
+|   |-- CONTRIBUTING.md
 |   |-- ISSUE_TEMPLATE/
 |   |-- pull_request_template.md
 |   `-- workflows/
-|-- CHANGELOG.md
-|-- CONTRIBUTING.md
-|-- CODE_OF_CONDUCT.md
 |-- Dockerfile
 |-- Dockerfile.streamlit
 |-- docker-compose.yml
@@ -335,9 +335,9 @@ Architecture decision records:
 
 Repository operations:
 
-- [CHANGELOG.md](./CHANGELOG.md)
-- [CONTRIBUTING.md](./CONTRIBUTING.md)
-- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- [docs/CHANGELOG.md](./docs/CHANGELOG.md)
+- [.github/CONTRIBUTING.md](./.github/CONTRIBUTING.md)
+- [.github/CODE_OF_CONDUCT.md](./.github/CODE_OF_CONDUCT.md)
 
 ---
 
@@ -378,7 +378,7 @@ Contributions are welcome, but this repo values coherent engineering stories ove
 
 Before opening a PR:
 
-1. Read [CONTRIBUTING.md](./CONTRIBUTING.md)
+1. Read [.github/CONTRIBUTING.md](./.github/CONTRIBUTING.md)
 2. Use the issue templates under [`.github/ISSUE_TEMPLATE/`](./.github/ISSUE_TEMPLATE/)
 3. Use the PR checklist in [`.github/pull_request_template.md`](./.github/pull_request_template.md)
 4. Run the most relevant local checks for your change
