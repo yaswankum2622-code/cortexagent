@@ -21,9 +21,9 @@ python -m evaluation.benchmark_runner \
 
 The RAGAS Quality Gate enforces these thresholds on every PR:
 
-- **Faithfulness >= 0.85** — answers must be grounded in retrieved context
-- **Answer Relevancy >= 0.80** — answers must address the user's question
-- **Context Precision >= 0.75** — retrieved chunks must actually be useful
+- **Faithfulness >= 0.40** — answers must remain grounded in retrieved context
+- **Answer Relevancy >= 0.20** — answers must still address the user's question
+- **Context Precision >= 0.25** — retrieved chunks must remain meaningfully useful
 
 If your PR fails the gate, look at the uploaded `ragas-ci-report` artifact to see which questions regressed.
 

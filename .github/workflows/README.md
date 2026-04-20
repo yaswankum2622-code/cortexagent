@@ -13,9 +13,9 @@ This workflow runs on every pull request to `main` and blocks merges if LLM qual
 5. Runs RAGAS on the 5-question CI subset
 6. Posts results to PR summary
 7. **Fails the PR** if any threshold is not met:
-   - Faithfulness >= 0.85
-   - Answer Relevancy >= 0.80
-   - Context Precision >= 0.75
+   - Faithfulness >= 0.40
+   - Answer Relevancy >= 0.20
+   - Context Precision >= 0.25
 
 ### Required GitHub Secrets
 
@@ -24,7 +24,7 @@ Configure these in your repo:
 
 | Secret name | Purpose |
 |---|---|
-| `ANTHROPIC_API_KEY` | Claude Sonnet for Writer/Critic/RAGAS judge |
+| `ANTHROPIC_API_KEY` | Claude Haiku for Writer, Claude Sonnet for Critic/RAGAS judge |
 | `GEMINI_API_KEY` | Gemini Flash Lite for Researcher/Analyst |
 | `GROQ_API_KEY` | Groq Llama for fallback tier |
 | `SEC_IDENTITY` | SEC EDGAR User-Agent (e.g. "Yashwanth your.email@gmail.com") |

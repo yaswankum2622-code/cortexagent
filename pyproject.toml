@@ -1,6 +1,6 @@
 [project]
 name = "cortexagent"
-version = "0.1.0"
+version = "1.0.1"
 description = "Production-grade agentic RAG platform for SEC 10-K financial research with RAGAS-gated CI/CD"
 readme = "README.md"
 requires-python = ">=3.11"

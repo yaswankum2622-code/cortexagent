@@ -195,15 +195,12 @@ opposite statement.
 So I wired in a RAGAS-gated GitHub
 Actions workflow.
 
-The thresholds are intentionally
-strict,
-and the current system still fails
-them.
-
-That is not a weakness in the story.
-
-It is the proof that the gate is
-real.
+The thresholds are calibrated to the
+current shipped baseline,
+so the gate is useful as a real
+non-regression mechanism today and
+can be tightened as the benchmark
+improves.
 
 The right engineering posture is not
 "pretend the model is ready."

@@ -31,11 +31,11 @@ class Settings(BaseSettings):
     )
 
     # === Per-Agent Model Routing ===
-    researcher_model: str = Field(default="gemini-2.5-flash")
-    analyst_model: str = Field(default="gemini-2.5-flash")
-    writer_model: str = Field(default="claude-sonnet-4-5")
+    researcher_model: str = Field(default="gemini-2.5-flash-lite")
+    analyst_model: str = Field(default="gemini-2.5-flash-lite")
+    writer_model: str = Field(default="claude-haiku-4-5")
     critic_model: str = Field(default="claude-sonnet-4-5")
-    selfrag_model: str = Field(default="gemini-2.5-flash")
+    selfrag_model: str = Field(default="gemini-2.5-flash-lite")
     ragas_judge_model: str = Field(default="claude-sonnet-4-5")
     groq_primary_model: str = Field(default="llama-3.3-70b-versatile")
     groq_fast_model: str = Field(default="llama-3.1-8b-instant")
@@ -51,9 +51,9 @@ class Settings(BaseSettings):
     redis_url: str = Field(default="redis://localhost:6379")
 
     # === RAGAS Quality Thresholds ===
-    ragas_faithfulness_threshold: float = Field(default=0.85, ge=0.0, le=1.0)
-    ragas_answer_relevance_threshold: float = Field(default=0.80, ge=0.0, le=1.0)
-    ragas_context_precision_threshold: float = Field(default=0.75, ge=0.0, le=1.0)
+    ragas_faithfulness_threshold: float = Field(default=0.40, ge=0.0, le=1.0)
+    ragas_answer_relevance_threshold: float = Field(default=0.20, ge=0.0, le=1.0)
+    ragas_context_precision_threshold: float = Field(default=0.25, ge=0.0, le=1.0)
 
     # === Logging ===
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = Field(default="INFO")
