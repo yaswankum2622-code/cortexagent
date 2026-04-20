@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cortexagent-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/app/chroma_db
+      - sec_data:/app/data
+    networks:
+      - cortex_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: cortexagent-dashboard
+    restart: unless-stopped
+    environment:
+      CORTEX_API_BASE: "http://api:8000"
+    ports:
+      - "8501:8501"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - cortex_net
+
+volumes:
+  chroma_data:
+    driver: local
+  sec_data:
+    driver: local
+
+networks:
+  cortex_net:
+    driver: bridge

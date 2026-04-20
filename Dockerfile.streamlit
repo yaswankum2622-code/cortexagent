@@ -38,24 +38,17 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 WORKDIR /app
 
-COPY agents/ ./agents/
-COPY rag/ ./rag/
-COPY api/ ./api/
-COPY tools/ ./tools/
-COPY config/ ./config/
-COPY evaluation/ ./evaluation/
-COPY audit/ ./audit/
 COPY dashboard/ ./dashboard/
-
-RUN mkdir -p /app/data/raw /app/data/processed /app/chroma_db
+COPY config/ ./config/
+COPY api/ ./api/
 
 RUN useradd --create-home --shell /bin/bash cortex && \
     chown -R cortex:cortex /app
 USER cortex
 
-EXPOSE 8000
+EXPOSE 8501
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:8000/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:8501/_stcore/health || exit 1
 
-CMD ["python", "-m", "api.main"]
+CMD ["streamlit", "run", "dashboard/app.py", "--server.address", "0.0.0.0", "--server.port", "8501", "--server.headless", "true", "--browser.gatherUsageStats", "false"]

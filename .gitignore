@@ -1,41 +1,108 @@
+# ==============================================================
+# CortexAgent — Comprehensive .gitignore
+# ==============================================================
+
+# -------- Secrets & local config --------
 .env
+.env.*
+!.env.example
+
+# -------- Python --------
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+*.egg
+MANIFEST
+build/
+dist/
+pip-wheel-metadata/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# -------- Virtual environments --------
 .venv/
 venv/
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-chroma_db/
+env/
+ENV/
 
-# Stray ChromaDB folder variant
-chroma/
+# -------- IDE / editor --------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.claude/
 
-*.log
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-*.egg-info/
-dist/
-build/
+# -------- OS --------
 .DS_Store
 Thumbs.db
-.idea/
-.vscode/
+Desktop.ini
+$RECYCLE.BIN/
 
-# RAGAS evaluation outputs — only commit *_final variants as portfolio artifacts
-evaluation/report_v*.html
+# -------- Logs --------
+*.log
+logs/
+
+# -------- Data directories (regenerable, large) --------
+data/raw/
+data/processed/
+data/calendar_bookings.json
+
+# -------- Vector databases (regenerable, large) --------
+chroma/
+chroma_db/
+
+# -------- HuggingFace cache --------
+.cache/
+~/.cache/huggingface/
+
+# -------- Evaluation — iteration runs (keep only *_final and *_baseline) --------
+# Regular RAGAS runs (ignored):
 evaluation/report.html
+evaluation/report_v*.html
 evaluation/ci_report*.html
 evaluation/raw_results.json
 evaluation/raw_results_v*.json
 evaluation/ci_raw_results.json
+
+# Regular red-team runs (ignored):
 evaluation/red_team_report.html
-!evaluation/red_team_report_baseline.html
 evaluation/red_team_raw.json
+
+# EXCEPTIONS (curated baselines — tracked as portfolio artifacts):
+!evaluation/report_final.html
+!evaluation/raw_results_final.json
+!evaluation/red_team_report_baseline.html
 !evaluation/red_team_raw_baseline.json
 
-data/calendar_bookings.json
+# -------- Docker build artifacts --------
+# (images are built, not committed)
+
+# -------- Node (not used but harmless) --------
+node_modules/
+npm-debug.log*
+
+# -------- Misc --------
+*.bak
+*.tmp
+*.orig
+
+# -------- Local screenshots and debug artifacts --------
+streamlit_*.png
+test-results/
+playwright-report/
+tmp_chrome_profile*/
+tmp_playwright_debug.js
+tmp_streamlit_debug.spec.js
+visuals/
